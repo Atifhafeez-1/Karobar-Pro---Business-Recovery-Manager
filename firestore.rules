@@ -1,0 +1,116 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Check if the caller belongs to the given business
+    function isBusinessUser(businessId) {
+      return isSignedIn() && (
+        request.auth.uid == businessId ||
+        (exists(/databases/$(database)/documents/businesses/$(businessId)) &&
+         get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerUid == request.auth.uid) ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.businessId == businessId)
+      );
+    }
+
+    function isBusinessOwner(businessId) {
+      return isSignedIn() && (
+        request.auth.uid == businessId ||
+        (exists(/databases/$(database)/documents/businesses/$(businessId)) &&
+         get(/databases/$(database)/documents/businesses/$(businessId)).data.ownerUid == request.auth.uid)
+      );
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || resource.data.businessId == request.auth.uid);
+      allow list: if isSignedIn() && resource.data.businessId == request.auth.uid;
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Businesses
+    match /businesses/{businessId} {
+      allow get: if isSignedIn() && isBusinessUser(businessId);
+      allow list: if isSignedIn() && resource.data.ownerUid == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(businessId) && incoming().ownerUid == request.auth.uid;
+      allow update: if isSignedIn() && isBusinessOwner(businessId);
+
+      // Shopkeepers subcollection
+      match /shopkeepers/{shopkeeperId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(shopkeeperId);
+        allow update: if isBusinessUser(businessId) && isValidId(shopkeeperId);
+        allow delete: if isBusinessOwner(businessId);
+      }
+
+      // Products subcollection
+      match /products/{productId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(productId);
+        allow update: if isBusinessUser(businessId) && isValidId(productId);
+        allow delete: if isBusinessOwner(businessId);
+      }
+
+      // Bills subcollection
+      match /bills/{billId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(billId);
+        allow update: if isBusinessUser(businessId) && isValidId(billId);
+        allow delete: if isBusinessOwner(businessId);
+      }
+
+      // Payments & Recoveries subcollection
+      match /payments/{paymentId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(paymentId);
+        allow update: if isBusinessUser(businessId) && isValidId(paymentId);
+        allow delete: if isBusinessOwner(businessId);
+      }
+
+      // Inventory movements subcollection
+      match /inventoryMovements/{movementId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(movementId);
+        allow update: if false; // Inventory movements are immutable audit records
+        allow delete: if false;
+      }
+
+      // Expenses subcollection
+      match /expenses/{expenseId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(expenseId);
+        allow update: if isBusinessUser(businessId) && isValidId(expenseId);
+        allow delete: if isBusinessOwner(businessId);
+      }
+
+      // Audit logs
+      match /auditLogs/{logId} {
+        allow read: if isBusinessUser(businessId);
+        allow create: if isBusinessUser(businessId) && isValidId(logId);
+        allow update, delete: if false; // Append-only audit trail
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Karobar Pro - Business & Recovery Manager",
+  "description": "Complete Android Business Management and Daily Recovery application for managing shopkeepers, credit bills, recovery payments, inventory, and ledger reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

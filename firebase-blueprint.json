@@ -1,0 +1,220 @@
+{
+  "entities": {
+    "business": {
+      "title": "Business",
+      "description": "Represents an enterprise or merchant profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "currency": { "type": "string", "maxLength": 8 },
+        "dateFormat": { "type": "string", "maxLength": 20 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "address": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "ownerUid"]
+    },
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "User profile with role-based permissions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "email": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin", "staff", "viewer"], "maxLength": 16 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "email", "name", "role"]
+    },
+    "shopkeeper": {
+      "title": "Shopkeeper",
+      "description": "Customer/Shopkeeper account profile and ledger summary",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "customerCode": { "type": "string", "maxLength": 32 },
+        "name": { "type": "string", "maxLength": 128 },
+        "shopName": { "type": "string", "maxLength": 128 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "address": { "type": "string", "maxLength": 256 },
+        "openingBalance": { "type": "number" },
+        "currentBalance": { "type": "number" },
+        "totalBills": { "type": "number" },
+        "totalPaid": { "type": "number" },
+        "totalRecovery": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "inactive"], "maxLength": 16 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "name", "shopName", "phone"]
+    },
+    "product": {
+      "title": "Product",
+      "description": "Inventory product item details and stock levels",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "sku": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 64 },
+        "barcode": { "type": "string", "maxLength": 64 },
+        "purchasePrice": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "openingStock": { "type": "number" },
+        "currentStock": { "type": "number" },
+        "minStockAlert": { "type": "number" },
+        "supplierName": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["active", "inactive"], "maxLength": 16 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "sku", "name", "purchasePrice", "sellingPrice"]
+    },
+    "bill": {
+      "title": "Bill",
+      "description": "Sales invoice generated for shopkeeper",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "billNumber": { "type": "string", "maxLength": 32 },
+        "shopkeeperId": { "type": "string", "maxLength": 64 },
+        "shopkeeperName": { "type": "string", "maxLength": 128 },
+        "billDate": { "type": "string", "maxLength": 32 },
+        "totalAmount": { "type": "number" },
+        "discount": { "type": "number" },
+        "netAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "remainingBalance": { "type": "number" },
+        "previousBalance": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid", "partial", "unpaid", "cancelled"], "maxLength": 16 },
+        "paymentMethod": { "type": "string", "enum": ["cash", "credit", "partial"], "maxLength": 16 },
+        "notes": { "type": "string", "maxLength": 512 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "billNumber", "shopkeeperId", "billDate", "netAmount"]
+    },
+    "payment": {
+      "title": "Payment",
+      "description": "Payment or recovery transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "transactionId": { "type": "string", "maxLength": 64 },
+        "shopkeeperId": { "type": "string", "maxLength": 64 },
+        "shopkeeperName": { "type": "string", "maxLength": 128 },
+        "billId": { "type": "string", "maxLength": 64 },
+        "amount": { "type": "number" },
+        "paymentDate": { "type": "string", "maxLength": 32 },
+        "paymentMethod": { "type": "string", "enum": ["cash", "bank_transfer", "other"], "maxLength": 20 },
+        "notes": { "type": "string", "maxLength": 512 },
+        "type": { "type": "string", "enum": ["recovery", "bill_payment", "advance", "refund"], "maxLength": 20 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "transactionId", "shopkeeperId", "amount", "paymentDate"]
+    },
+    "inventoryMovement": {
+      "title": "InventoryMovement",
+      "description": "Stock change log entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "productId": { "type": "string", "maxLength": 64 },
+        "productName": { "type": "string", "maxLength": 128 },
+        "movementType": { "type": "string", "enum": ["sale", "purchase", "adjustment", "return"], "maxLength": 20 },
+        "quantity": { "type": "number" },
+        "previousStock": { "type": "number" },
+        "newStock": { "type": "number" },
+        "referenceId": { "type": "string", "maxLength": 64 },
+        "reason": { "type": "string", "maxLength": 256 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "productId", "movementType", "quantity"]
+    },
+    "expense": {
+      "title": "Expense",
+      "description": "Business expense entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 64 },
+        "amount": { "type": "number" },
+        "expenseDate": { "type": "string", "maxLength": 32 },
+        "paymentMethod": { "type": "string", "enum": ["cash", "bank_transfer", "other"], "maxLength": 20 },
+        "description": { "type": "string", "maxLength": 256 },
+        "notes": { "type": "string", "maxLength": 512 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "category", "amount", "expenseDate"]
+    },
+    "auditLog": {
+      "title": "AuditLog",
+      "description": "Audit record for sensitive operations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "businessId": { "type": "string", "maxLength": 64 },
+        "action": { "type": "string", "maxLength": 64 },
+        "entityType": { "type": "string", "maxLength": 64 },
+        "entityId": { "type": "string", "maxLength": 64 },
+        "performedBy": { "type": "string", "maxLength": 128 },
+        "details": { "type": "string", "maxLength": 1024 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "businessId", "action", "entityType"]
+    }
+  },
+  "firestore": {
+    "/businesses/{businessId}": {
+      "schema": "business",
+      "description": "Business configuration and organization metadata"
+    },
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "User profiles and their associated business and role"
+    },
+    "/businesses/{businessId}/shopkeepers/{shopkeeperId}": {
+      "schema": "shopkeeper",
+      "description": "Shopkeepers and customer ledger profiles"
+    },
+    "/businesses/{businessId}/products/{productId}": {
+      "schema": "product",
+      "description": "Inventory products with current stock and prices"
+    },
+    "/businesses/{businessId}/bills/{billId}": {
+      "schema": "bill",
+      "description": "Sales invoices and credit bill entries"
+    },
+    "/businesses/{businessId}/payments/{paymentId}": {
+      "schema": "payment",
+      "description": "Daily recoveries and bill payments"
+    },
+    "/businesses/{businessId}/inventoryMovements/{movementId}": {
+      "schema": "inventoryMovement",
+      "description": "Inventory movement and stock audit history"
+    },
+    "/businesses/{businessId}/expenses/{expenseId}": {
+      "schema": "expense",
+      "description": "Daily and monthly operating business expenses"
+    },
+    "/businesses/{businessId}/auditLogs/{logId}": {
+      "schema": "auditLog",
+      "description": "Security and accounting audit logs"
+    }
+  }
+}
