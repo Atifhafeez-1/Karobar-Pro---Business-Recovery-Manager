@@ -619,17 +619,76 @@ echo "Debug APK generated at: app/build/outputs/apk/debug/app-debug.apk"
 `,
     },
     {
+      path: '.github/workflows/build-apk.yml',
+      content: `name: Build Android APK on GitHub
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Debug APK with Gradle
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK as GitHub Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KarobarPro-Debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+`,
+    },
+    {
       path: 'README_APK_BUILD.md',
       content: `# Karobar Pro - Android APK Build Instructions
 
-## Method 1: Instant Install via Android Phone Browser (PWA WebAPK)
+## Method 1: Automated Cloud Build via GitHub Actions (No Android Studio Needed!)
+1. Create a repository on GitHub (e.g. \`karobar-pro\`).
+2. Push this project to GitHub:
+   \`\`\`bash
+   git init
+   git add .
+   git commit -m "Initial commit for Karobar Pro"
+   git branch -M main
+   git remote add origin https://github.com/<your-username>/<your-repo-name>.git
+   git push -u origin main
+   \`\`\`
+3. Go to your repository on GitHub and click the **Actions** tab.
+4. The **Build Android APK on GitHub** workflow runs automatically on GitHub's cloud runners.
+5. When finished (typically ~2-3 mins), click the workflow run, scroll down to **Artifacts**, and download **KarobarPro-Debug-APK**.
+6. Extract the zip to get \`app-debug.apk\` and install on any Android phone!
+
+---
+
+## Method 2: Instant Install via Android Phone Browser (PWA WebAPK)
 1. Open this application URL on your Android phone using **Google Chrome**.
 2. Tap the blue **"Install Android App"** button at the top header, or tap Chrome Menu (⋮) -> **"Install App"** (or **"Add to Home screen"**).
 3. Android will automatically package and install **Karobar Pro** as an APK directly on your device with full offline storage, native splash screen, and full-screen experience.
 
 ---
 
-## Method 2: Build Signed APK with Android Studio
+## Method 3: Build Signed APK with Android Studio
 1. Download the complete Android Studio project zip using the button in the app.
 2. Extract the ZIP file on your computer.
 3. Open **Android Studio** -> Click **Open** -> Select the extracted \`KarobarPro\` folder.
@@ -643,7 +702,7 @@ echo "Debug APK generated at: app/build/outputs/apk/debug/app-debug.apk"
 
 ---
 
-## Method 3: Command-Line Build with Gradle
+## Method 4: Command-Line Build with Gradle
 \`\`\`bash
 # 1. Make gradlew executable
 chmod +x gradlew

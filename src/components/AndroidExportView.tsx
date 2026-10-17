@@ -19,6 +19,7 @@ import {
   ArrowRight,
   PackageCheck,
   Sparkles,
+  Github,
 } from 'lucide-react';
 
 export const AndroidExportView: React.FC = () => {
@@ -137,89 +138,215 @@ export const AndroidExportView: React.FC = () => {
         </div>
       </div>
 
-      {/* Two Installation Pathways */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Three Installation & Build Pathways */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* Path 1: Instant Install on Android Phone via Browser */}
         <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs space-y-3">
           <div className="flex items-center gap-2 text-blue-600 font-bold text-sm">
             <Smartphone className="h-5 w-5" />
-            <span>Method 1: 1-Tap Install (WebAPK on Phone)</span>
+            <span>Method 1: 1-Tap WebAPK</span>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Modern Android devices can directly package and install this Progressive Web App as a native WebAPK file right from Chrome with zero compiling required.
+            Directly package and install as a native WebAPK file right from Chrome on Android with zero compiling.
           </p>
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2 text-xs text-slate-700">
             <div className="flex items-start gap-2">
               <span className="font-bold text-blue-600">1.</span>
-              <span>Open this app URL in <strong>Google Chrome</strong> on your Android phone.</span>
+              <span>Open this app URL in <strong>Google Chrome</strong> on Android.</span>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-bold text-blue-600">2.</span>
-              <span>Tap the top <strong>Install Android App</strong> button or tap Chrome menu (⋮) → <strong>Install App</strong>.</span>
+              <span>Tap <strong>Install WebAPK (1-Tap)</strong> or Chrome menu (⋮) → <strong>Install App</strong>.</span>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-bold text-blue-600">3.</span>
-              <span>Android will place the Karobar Pro app icon on your home screen and app drawer with 100% offline database support!</span>
+              <span>Android adds the app to your home screen with 100% offline support.</span>
             </div>
           </div>
         </div>
 
-        {/* Path 2: Build Native APK in Android Studio */}
+        {/* Path 2: Automated GitHub Actions Cloud Build */}
+        <div className="bg-white rounded-2xl border-2 border-indigo-500/30 p-5 shadow-md space-y-3 relative overflow-hidden">
+          <div className="absolute top-2 right-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full">
+            Recommended Cloud
+          </div>
+          <div className="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+            <Github className="h-5 w-5" />
+            <span>Method 2: Build on GitHub</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Push code to a GitHub repo and let free GitHub Actions cloud runners compile the <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">.apk</code> for you!
+          </p>
+          <div className="p-3.5 rounded-xl bg-indigo-50/50 border border-indigo-100 space-y-2 text-xs text-slate-700">
+            <div className="flex items-start gap-2">
+              <span className="font-bold text-indigo-700">1.</span>
+              <span>Push project to GitHub with <code className="font-mono text-[11px]">.github/workflows/build-apk.yml</code>.</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="font-bold text-indigo-700">2.</span>
+              <span>GitHub Actions automatically builds the APK in ~2 minutes.</span>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="font-bold text-indigo-700">3.</span>
+              <span>Go to <strong>Actions</strong> tab → Click run → Download <strong>Artifacts (.apk)</strong>!</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Path 3: Build Native APK in Android Studio */}
         <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs space-y-3">
           <div className="flex items-center gap-2 text-emerald-700 font-bold text-sm">
             <FolderArchive className="h-5 w-5" />
-            <span>Method 2: Native APK via Android Studio & Gradle</span>
+            <span>Method 3: Android Studio</span>
           </div>
           <p className="text-xs text-slate-600 leading-relaxed">
-            Build a standalone signed <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">.apk</code> file using Jetpack Compose and Android Room Database.
+            Build a custom signed <code className="bg-slate-100 px-1 py-0.5 rounded font-mono">.apk</code> locally using Android Studio and Jetpack Compose.
           </p>
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-100 space-y-2 text-xs text-slate-700">
             <div className="flex items-start gap-2">
               <span className="font-bold text-emerald-700">1.</span>
-              <span>Extract the downloaded <code className="font-mono">KarobarPro_Android_Studio_Project.zip</code>.</span>
+              <span>Extract downloaded <code className="font-mono">KarobarPro_Android_Studio_Project.zip</code>.</span>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-bold text-emerald-700">2.</span>
-              <span>Open in <strong>Android Studio</strong> → Click <strong>Build</strong> → <strong>Build APK(s)</strong>.</span>
+              <span>Open in <strong>Android Studio</strong> → <strong>Build APK(s)</strong>.</span>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-bold text-emerald-700">3.</span>
-              <span>Output APK: <code className="font-mono text-emerald-800">app/build/outputs/apk/release/app-release.apk</code></span>
+              <span>Output: <code className="font-mono text-emerald-800 text-[11px]">app/build/outputs/apk/debug/app-debug.apk</code></span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Gradle Terminal Commands Guide */}
-      <div className="bg-slate-900 text-slate-100 rounded-2xl p-5 shadow-lg space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-emerald-400 font-bold text-xs uppercase tracking-wider">
-            <Terminal className="h-4 w-4" />
-            <span>Terminal Gradle Commands to Build APK</span>
+      {/* GitHub Actions Full Step-by-Step Walkthrough */}
+      <div className="bg-slate-900 text-slate-100 rounded-3xl p-6 shadow-xl space-y-5 border border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+              <Github className="h-6 w-6" />
+            </div>
+            <div>
+              <h3 className="text-base font-black text-white flex items-center gap-2">
+                <span>How to Build APK on GitHub (Step-by-Step Guide)</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">
+                  Cloud CI/CD
+                </span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Build your APK for free in the cloud without installing Android Studio or Java locally.
+              </p>
+            </div>
           </div>
-          <span className="text-[11px] text-slate-400 font-mono">Linux / macOS / Windows</span>
         </div>
 
-        <pre className="bg-slate-950 p-4 rounded-xl text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed border border-slate-800">
-{`# 1. Unzip the downloaded project
-unzip KarobarPro_Android_Studio_Project.zip
-cd KarobarPro
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <div className="flex items-center gap-2 text-indigo-400 font-bold uppercase tracking-wider text-[11px]">
+              <span className="w-5 h-5 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-xs">1</span>
+              <span>Push to GitHub</span>
+            </div>
+            <p className="text-slate-300 leading-relaxed">
+              Create a new GitHub repository, extract the Android project, and push the code:
+            </p>
+            <pre className="p-2.5 rounded-xl bg-slate-900 font-mono text-[11px] text-emerald-300 overflow-x-auto border border-slate-800/80">
+{`git init
+git add .
+git commit -m "Karobar Pro"
+git branch -M main
+git remote add origin <REPO_URL>
+git push -u origin main`}
+            </pre>
+          </div>
 
-# 2. Make gradlew executable
-chmod +x gradlew
+          <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <div className="flex items-center gap-2 text-purple-400 font-bold uppercase tracking-wider text-[11px]">
+              <span className="w-5 h-5 rounded-full bg-purple-500/20 text-purple-300 flex items-center justify-center text-xs">2</span>
+              <span>Automatic Cloud Build</span>
+            </div>
+            <p className="text-slate-300 leading-relaxed">
+              GitHub detects <code className="text-purple-300 font-mono">.github/workflows/build-apk.yml</code> and automatically spins up an Ubuntu runner with JDK 17 and Android SDK.
+            </p>
+            <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-[11px] space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                <CheckCircle className="h-3.5 w-3.5" />
+                <span>Runs ./gradlew assembleDebug</span>
+              </div>
+              <div>⚡ Execution time: ~2 minutes</div>
+              <div>🔒 Safe, sandboxed & reproducible</div>
+            </div>
+          </div>
 
-# 3. Build Debug APK (installs on any phone without signing)
-./gradlew assembleDebug
+          <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
+            <div className="flex items-center gap-2 text-emerald-400 font-bold uppercase tracking-wider text-[11px]">
+              <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xs">3</span>
+              <span>Download Your APK</span>
+            </div>
+            <p className="text-slate-300 leading-relaxed">
+              In your GitHub repo:
+            </p>
+            <ol className="list-decimal list-inside space-y-1 text-slate-300">
+              <li>Click the <strong>Actions</strong> tab</li>
+              <li>Click the completed <strong>Build Android APK</strong> run</li>
+              <li>Under <strong>Artifacts</strong>, click <strong>KarobarPro-Debug-APK</strong></li>
+              <li>Transfer the <code className="text-emerald-300">.apk</code> to your phone & install!</li>
+            </ol>
+          </div>
+        </div>
 
-# Output APK: app/build/outputs/apk/debug/app-debug.apk
+        {/* GitHub Actions Workflow Preview & Copy */}
+        <div className="bg-slate-950 rounded-2xl p-4 border border-slate-800 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-xs text-slate-400">
+              Workflow file: <strong className="text-slate-200">.github/workflows/build-apk.yml</strong> (Already included in your download!)
+            </span>
+            <button
+              onClick={() => handleCopyFileContent(`name: Build Android APK on GitHub
 
-# 4. Build Signed Release APK
-./gradlew assembleRelease
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
-# 5. Install directly on connected Android device via ADB
-adb install -r app/build/outputs/apk/debug/app-debug.apk`}
-        </pre>
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Debug APK with Gradle
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK as GitHub Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KarobarPro-Debug-APK
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+`)}
+              className="flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 text-xs font-bold text-white transition cursor-pointer"
+            >
+              {copiedCode ? <CheckCircle className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              <span>{copiedCode ? 'Workflow Copied!' : 'Copy Workflow YAML'}</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Interactive Code Explorer */}
