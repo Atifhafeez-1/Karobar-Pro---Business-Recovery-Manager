@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Karobar Pro</string>
+    <string name="title_activity_main">Karobar Pro</string>
+    <string name="package_name">com.karobarpro.app</string>
+    <string name="custom_url_scheme">com.karobarpro.app</string>
+</resources>
