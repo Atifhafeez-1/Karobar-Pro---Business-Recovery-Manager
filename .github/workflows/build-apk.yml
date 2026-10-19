@@ -21,9 +21,10 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install Node Dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci
 
       - name: Build Web Application
         run: npm run build
