@@ -302,7 +302,7 @@ git push -u origin main`}
               Workflow file: <strong className="text-slate-200">.github/workflows/build-apk.yml</strong> (Already included in your download!)
             </span>
             <button
-              onClick={() => handleCopyFileContent(`name: Build Android APK on GitHub
+              onClick={() => handleCopyFileContent(`name: Build Android APK
 
 on:
   push:
@@ -312,13 +312,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     name: Build Android APK
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Sync Web Application to Android Wrapper
+        run: npx cap sync android
 
       - name: Set up Java JDK 17
         uses: actions/setup-java@v4
@@ -326,19 +346,48 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+          cache-dependency-path: |
+            android/gradle/wrapper/gradle-wrapper.properties
+            gradle/wrapper/gradle-wrapper.properties
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platforms;android-36 build-tools;36.0.0 platform-tools'
+          accept-android-sdk-licenses: true
+
+      - name: Ensure Android SDK Command-line Tools in PATH
+        run: |
+          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+
+      - name: Accept All Android SDK Licenses Non-Interactively
+        run: |
+          mkdir -p "$ANDROID_HOME/licenses"
+          yes | sdkmanager --licenses || true
+
+      - name: Grant Execute Permission to Gradlew
+        run: |
+          chmod +x gradlew || true
+          chmod +x android/gradlew || true
 
       - name: Build Debug APK with Gradle
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          cd android
+          ./gradlew assembleDebug --stacktrace --no-daemon
 
-      - name: Upload APK as GitHub Artifact
+      - name: Verify APK Generated
+        run: |
+          ls -la android/app/build/outputs/apk/debug/
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Debug APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: KarobarPro-Debug-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: android/app/build/outputs/apk/debug/*.apk
           retention-days: 30
+          if-no-files-found: error
 `)}
               className="flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 text-xs font-bold text-white transition cursor-pointer"
             >

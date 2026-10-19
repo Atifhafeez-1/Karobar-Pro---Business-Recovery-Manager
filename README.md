@@ -53,12 +53,14 @@ Karobar Pro is an offline-first business credit, daily recovery, invoicing, cust
 ## 3. How to Build the APK on GitHub (Automated CI/CD)
 
 The repository includes a ready-to-use GitHub Actions workflow (`.github/workflows/build-apk.yml`). When you push your repository to GitHub, the workflow automatically:
-1. Sets up Node.js 22 and installs dependencies (`npm install --legacy-peer-deps`)
+1. Sets up Node.js 22 and cleanly installs dependencies (`npm ci`) using `package-lock.json`
 2. Compiles production web assets (`npm run build`)
-3. Syncs web assets to the Android wrapper (`npx cap sync android`)
-4. Sets up Java JDK 17 and the Android SDK
-5. Runs `./gradlew assembleDebug` in the `android/` directory
-6. Uploads the generated `app-debug.apk` as a downloadable GitHub Actions artifact!
+3. Syncs web assets to the native Android wrapper (`npx cap sync android`)
+4. Sets up Java JDK 17 (Temurin) with Gradle dependency caching
+5. Sets up Android SDK using `android-actions/setup-android@v4` with `platforms;android-36` and `build-tools;36.0.0`
+6. Non-interactively accepts all Android SDK licenses in CI via `yes | sdkmanager --licenses`
+7. Runs `./gradlew assembleDebug` in the `android/` directory
+8. Uploads the verified `app-debug.apk` as a downloadable GitHub Actions artifact!
 
 ### Steps:
 1. Push your code to GitHub:
