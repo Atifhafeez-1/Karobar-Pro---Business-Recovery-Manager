@@ -56,7 +56,7 @@ The repository includes a ready-to-use GitHub Actions workflow (`.github/workflo
 1. Sets up Node.js 22 and cleanly installs dependencies (`npm ci`) using `package-lock.json`
 2. Compiles production web assets (`npm run build`)
 3. Syncs web assets to the native Android wrapper (`npx cap sync android`)
-4. Sets up Java JDK 17 (Temurin) with Gradle dependency caching
+4. Sets up Java JDK 21 (Temurin) with Gradle dependency caching
 5. Sets up Android SDK using `android-actions/setup-android@v4` with `platforms;android-36` and `build-tools;36.0.0`
 6. Non-interactively accepts all Android SDK licenses in CI via `yes | sdkmanager --licenses`
 7. Runs `./gradlew assembleDebug` in the `android/` directory
@@ -80,8 +80,8 @@ The repository includes a ready-to-use GitHub Actions workflow (`.github/workflo
 
 ### Prerequisites:
 * **Node.js**: v18+ (v20 or v22 recommended)
-* **Java Development Kit (JDK)**: JDK 17
-* **Android SDK**: Build-Tools 34.0.0+ / 35.0.0+ or Android Studio Ladybug/Koala
+* **Java Development Kit (JDK)**: JDK 21
+* **Android SDK**: Build-Tools 34.0.0+ / 35.0.0+ / 36.0.0 or Android Studio Ladybug/Koala
 
 ### Build Commands:
 ```bash

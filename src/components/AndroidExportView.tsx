@@ -266,7 +266,7 @@ git push -u origin main`}
               <span>Automatic Cloud Build</span>
             </div>
             <p className="text-slate-300 leading-relaxed">
-              GitHub detects <code className="text-purple-300 font-mono">.github/workflows/build-apk.yml</code> and automatically spins up an Ubuntu runner with JDK 17 and Android SDK.
+              GitHub detects <code className="text-purple-300 font-mono">.github/workflows/build-apk.yml</code> and automatically spins up an Ubuntu runner with JDK 21 and Android SDK.
             </p>
             <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-[11px] space-y-1">
               <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
@@ -340,10 +340,10 @@ jobs:
       - name: Sync Web Application to Android Wrapper
         run: npx cap sync android
 
-      - name: Set up Java JDK 17
+      - name: Set up Java JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           cache: gradle
           cache-dependency-path: |
